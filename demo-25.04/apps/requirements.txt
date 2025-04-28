@@ -4,3 +4,7 @@ websockets
 aioconsole
 mozcpy
 mecab
+rapidfuzz
+jaconv
+ipadic
+tqdm

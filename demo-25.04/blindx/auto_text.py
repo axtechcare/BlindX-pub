@@ -4,18 +4,23 @@
 import asyncio
 import logging
 
-class AutoMessage():
-    def __init__(self, session_id, input_text):
-        self.session_id = session_id
-        self.input_text = input_text
-    
 class AutoText():
-    def __init__(self, my_key, active_names, play_callback_async):
+    def __init__(self, my_key, active_names, app):
         self.logger = logging.getLogger(__name__)
         self.my_key = my_key
         self.active_names = active_names
-        self.play_callback_async = play_callback_async
+        self.app = app
+        self.app.page.pubsub.subscribe_topic('auto_text', self.on_message_async)
         self.task = None
+
+    async def on_message_async(self, topic, message):
+        key = message['key']
+        input_text = message['text']
+        if self.my_key == key:
+            input_text, output_lines = self.app.frontend.update(key, input_text)
+            self.app.frontend.invoke_output_callbacks()
+            await self.app.set_input_async(input_text)
+            self.app.update()
 
     async def cancel_async(self):
         if self.task:
@@ -46,7 +51,7 @@ class AutoText():
                     message = {
                         'key': user_name, 'text' : src_text
                     }
-                    await self.play_callback_async(message)
+                    self.app.page.pubsub.send_all_on_topic('auto_text', message)
                     await asyncio.sleep(0.1)
 
         except Exception as e:

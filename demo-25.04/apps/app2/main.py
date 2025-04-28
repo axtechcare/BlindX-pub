@@ -8,13 +8,13 @@ from blindx.romhira import Romhira
 from blindx.frontend import Backend
 from blindx.frontend import Frontend
 from blindx.edit_line import EditLine
-from blindx.misc import set_logger
 from ft_viewer import FtViewer
+import blindx.misc as misc
 
 import flet as ft
 import logging
 
-set_logger('app0')
+misc.set_logger('app0')
 backend = Backend()
 
 special_keys = {

@@ -6,13 +6,13 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.
 
 from blindx.backend import Backend
 from blindx.login import Login
-from blindx.misc import set_logger
 from ft_app import FtApp
 
+import blindx.misc as misc
 import flet as ft
 import logging
 
-set_logger('app1')
+misc.set_logger('app1')
 logger = logging.getLogger(__name__)
 backend = Backend()
 login = Login()

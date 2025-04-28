@@ -144,7 +144,7 @@ class FtApp(FtAppBase):
             
     def get_greeting_span(self, current_name, is_first):
         return ft.TextSpan(
-            f'\n{current_name} さんが投稿しました\n',
+            f'\n{current_name} さんが参加しました\n',
             style=ft.TextStyle(italic=True, size=14))
 
     def get_output_spans_with_compare(self, line):
@@ -159,13 +159,12 @@ class FtApp(FtAppBase):
         spans.append(ft.TextSpan(' '));
         spans.append(ft.TextSpan(output_text))
 
-        # if spans and self.is_compare:
         if spans and self.is_compare:
             input_text = line.input_text.replace('\n', '\\n')
             mozc_text = self.mozc.convert(input_text).replace('\\n', '\n') + '\n'
 
             if set(mozc_text) != '\n':
-                spans.append(ft.TextSpan('他社    ', guide_style))
+                spans.append(ft.TextSpan('Mozc    ', guide_style))
                 spans.append(ft.TextSpan(' '));
                 spans += FtColorSpansSimple(mozc_text, output_text)
 

@@ -4,12 +4,14 @@
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
-from blindx.misc import set_logger
 from blindx.remote_inference import RemoteInference
+
+import blindx.misc as misc
 import asyncio
 
-set_logger(__file__)
+misc.set_logger(__file__)
 async def main():
+
     input_text = (
         "「きみのひとみにこいしてる」（げんだい`Cant' take my eyes off you`）はふらんきー・ゔぁりのさくひんで"
         "のちにぼーいず・たうん・ぎゃんぐがかばーしにほんでは１９８２ねんに"
@@ -20,5 +22,6 @@ async def main():
     async with RemoteInference() as inference:
         result = await inference.send_recv_async('T0:8:', input_text, fixed_text, aux_args)
         print(result.replace(':', '\n'))
+
 
 asyncio.run(main())

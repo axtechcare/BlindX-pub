@@ -5,10 +5,6 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 
-__all__ = [
-    'set_logger', 'search_path', 'load_string_from_file', 'parse_key_value_string',
-]
-
 def set_logger(path, console_level = logging.INFO, file_level = logging.INFO):
 
     log_path = os.path.splitext(path)[0] + ".log"
@@ -86,12 +82,18 @@ def parse_key_value_string(s):
         if '=' in item for k, v in [item.split('=', 1)]
     }
 
+def pretty_print_dict(d):
+    width = max(len(k) for k in d)
+    for k, v in d.items():
+        print(f"{k.ljust(width)} : {v}")
+
 def load_args_from_file(path):
 
+    logger = logging.getLogger(__name__)
     try:
         path = search_path(path)
+        logger.info(f'load from {path}')
     except FileNotFoundError as e:
-        logger = logging.getLogger(__name__)
         logger.error(e)
         return {}
 
@@ -99,6 +101,8 @@ def load_args_from_file(path):
     for line in load_string_from_file(path).splitlines():
         if line and line[0] != '#': 
             args |= parse_key_value_string(line)
+
+    logger.info(args)
     return args        
 
 

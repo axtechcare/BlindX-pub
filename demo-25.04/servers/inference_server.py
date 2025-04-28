@@ -28,7 +28,7 @@ async def main():
                     if message[0] == 'T':
                         result = inference.translate(message)
                     else:    
-                        result = inference.query(message)
+                        result = inference.control(message)
                     await websocket.send(result)
 
             except websockets.ConnectionClosed:

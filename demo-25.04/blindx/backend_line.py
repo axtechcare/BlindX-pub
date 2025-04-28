@@ -49,12 +49,14 @@ class BackendLine:
     def serialize(self):
         self.serialized_text = ''
         if self.key:
-            self.serialized_text += self.key + ':'
-            self.serialized_text += self.input_text + ':'
-            self.serialized_text += self.output_text + ':'
-            self.serialized_text += self.stage_input_text + ':'
-            self.serialized_text += self.prev_output_text + ':'
-            self.serialized_text += self.long_output_text
+            self.serialized_text = ':'.join([
+                self.key,
+                self.input_text,
+                self.output_text,
+                self.stage_input_text,
+                self.prev_output_text,
+                self.long_output_text,
+            ])
 
     def deserialize(self):
         lines = self.serialized_text.split(':')

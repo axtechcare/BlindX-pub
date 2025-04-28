@@ -110,6 +110,22 @@ class Frontend():
             return ''
         return line.input_text
 
+    def append(self, key, input_text, output_text):
+        self.insert_next_line(key)
+        self.lineno = self.backend.prev_line(key, self.lineno + 1)
+
+        line = self.backend.lines[self.lineno]
+        line.do_short = line.do_long = True
+        line.input_text = input_text
+        if output_text:
+            line.stage_input_text = input_text
+            line.prev_output_text = output_text
+            line.output_text = output_text
+            line.long_output_text = output_text
+            self.backend.invoke_output_callbacks()
+
+        self.backend.request(key)    
+
     def update(self, key, romaji_text, is_insert = False):
 
         input_text = ''
@@ -127,6 +143,7 @@ class Frontend():
 
         if not self.is_new_line:
             input_text = self.move_from_romhira(key)
+
         else: 
             input_text = ''
             if is_insert:    

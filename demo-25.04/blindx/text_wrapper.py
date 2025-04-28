@@ -1,7 +1,13 @@
 import re
 class TextWrapper:
-    def __init__(self, pattern = r'`.*?`', replacement='\\E'):
-        self.pattern = re.compile(pattern)  # 正規表現をコンパイル
+    def __init__(self):
+        self.set_pattern(r'`.*?`')
+        self.set_replacement('\\E')
+
+    def set_pattern(self, pattern):
+        self.pattern = re.compile(pattern)  
+
+    def set_replacement(self, replacement):
         self.replacement = replacement
 
     def encode(self, text):
@@ -20,7 +26,7 @@ class TextWrapper:
 
         result = []
         match_iter = iter(self.matches)  # マッチ部分のリストをイテレータ化
-        parts = modified_text.replace('\\n', '\n').replace(' ', '').split(self.replacement)
+        parts = modified_text.replace('\\n', '\n').split(self.replacement)
         for i, part in enumerate(parts):
             result.append(part)
             if i < len(parts) - 1:

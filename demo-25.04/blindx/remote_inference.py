@@ -4,17 +4,16 @@
 import asyncio
 import websockets
 import logging
-from .misc import set_logger, load_args_from_file
+from . import misc
 
 class RemoteInference():
 
     def __init__(self):
+
         self.logger = logging.getLogger(__name__)
         self.websocket = None
-        self.set_uri_and_key()
 
-    def set_uri_and_key(self):
-        args = load_args_from_file('assets/config.txt')
+        args = misc.load_args_from_file('config.txt')
         self.uri = args.get('inference_server_uri')
         self.key = args.get('api_key')
 

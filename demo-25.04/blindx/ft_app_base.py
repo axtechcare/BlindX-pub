@@ -42,8 +42,7 @@ class FtAppBase():
             self.active_names = self.backend_share.active_names
 
         self.settings = FtSettingDrawer(self.my_key, self.frontend.backend)
-        self.auto_text = AutoText(self.my_key, self.active_names, self.on_pubsub_send_async)
-        self.page.pubsub.subscribe_topic('auto_text', self.on_pubsub_recv_async)
+        self.auto_text = AutoText(self.my_key, self.active_names, self)
 
         self.page.on_keyboard_event = self.on_keyboard_event_async
         self.on_button_event_async = self.on_button_event_async
@@ -86,16 +85,3 @@ class FtAppBase():
         input_text, output_lines = self.frontend.update(self.my_key, e.control.value)
         await self.set_input_async(input_text)
         self.frontend.invoke_output_callbacks()
-
-    async def on_pubsub_send_async(self, message):
-        self.page.pubsub.send_all_on_topic('auto_text', message)
-
-    async def on_pubsub_recv_async(self, topic, message):
-        key = message['key']
-        input_text = message['text']
-        if self.my_key == key:
-            input_text, output_lines = self.frontend.update(key, input_text)
-            self.frontend.invoke_output_callbacks()
-            await self.set_input_async(input_text)
-            self.update()
-

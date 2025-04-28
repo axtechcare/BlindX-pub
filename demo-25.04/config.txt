@@ -1,0 +1,3 @@
+inference_server_uri=ws://localhost:6789
+# inference_server_uri=wss://finer-charmed-dassie.ngrok-free.app
+api_key=QyTSXNtD

@@ -4,3 +4,4 @@ transformers
 sentencepiece
 datasets
 scipy
+faster-whisper

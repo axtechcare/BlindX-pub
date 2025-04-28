@@ -43,7 +43,6 @@ async def handle_client(websocket):
 
     try:
         async for message in websocket:
-            # print('\t' + message.replace('\n', '\\n'))
             if message == 'clear:':
                 logger.info('recv clear')
                 lines = []

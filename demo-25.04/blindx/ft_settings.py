@@ -3,7 +3,8 @@
 
 import flet as ft
 from .backend import Backend
-from .misc import search_path, load_string_from_file
+from . import misc
+
 import os
 
 class FtSettingDrawer(ft.NavigationDrawer):
@@ -12,7 +13,10 @@ class FtSettingDrawer(ft.NavigationDrawer):
         super().__init__(position=ft.NavigationDrawerPosition.START)
         self.key = key
         self.backend = backend
-        self.sample_text = self.load_sample_text('ビジネスチャット１.txt')
+
+        args = misc.load_args_from_file('config.txt')
+        sample_text = args.get('sample_text', 'ビジネスチャット１.txt')
+        self.sample_text = self.load_sample_text(sample_text)
 
         sample_text_options = []
         for name in self.get_sample_text_names():
@@ -22,7 +26,7 @@ class FtSettingDrawer(ft.NavigationDrawer):
         for name in backend.dict_names:
             dict_options.append(ft.dropdown.Option(name))
 
-        dict_name = 'wiki256_small_64_all_-5'
+        dict_name = args.get('dict_name', 'wiki256_small_64_all_-5')
         attr = backend.get_attr(key)
         attr['dict_type'] = self.get_dict_type(dict_name)
         backend.set_attr(key, attr)
@@ -45,7 +49,7 @@ class FtSettingDrawer(ft.NavigationDrawer):
                         ft.Divider(thickness=2),
                         ft.Dropdown(
                             options = sample_text_options,
-                            value='ビジネスチャット１.txt',
+                            value=sample_text,
                             label="デモに使用するテキストを選択",
                             on_change=self.on_select_sample_text,
                             width=290,
@@ -82,14 +86,14 @@ class FtSettingDrawer(ft.NavigationDrawer):
         sefl.backend.remove_attr(self.key)
 
     def get_sample_text_names(self):
-        target_dir = search_path('assets/samples')
+        target_dir = misc.search_path('assets/samples')
         files = os.listdir(target_dir)
         return sorted([file for file in files if file.endswith(".txt")])
 
     def load_sample_text(self, name):
-        target_dir = search_path('assets/samples')
+        target_dir = misc.search_path('assets/samples')
         full_path = os.path.join(target_dir, name)
-        return load_string_from_file(full_path)
+        return misc.load_string_from_file(full_path)
 
     def get_dict_type(self, name):
         try:

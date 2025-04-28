@@ -204,6 +204,7 @@ class Backend():
 
         if line.do_short:
             output = await inference.send_recv_async(attr['dict_type'], stage_input_text)
+            # output = await inference.send_recv_async(attr['dict_type'], stage_input_text, '', 'num_beams=1')
         else:    
             output = stage_input_text
 
@@ -215,8 +216,6 @@ class Backend():
         stage_input_text = line.input_text
         if line.do_long:
             all_stage_input_text = self.concat_prev_inputs(line.key, lineno, attr['max_concat_size'])
-            # print(f'predict_async_long {all_stage_input_text}')
-
             recv_message = await inference.send_recv_async(attr['dict_type'] , all_stage_input_text)
             output = recv_message.split('\\&')[-1]
             line.do_short = True # don't forget
@@ -253,8 +252,7 @@ class Backend():
     def concat_prev_inputs(self, key, lineno, max_concat_size):    
         all_stage_input_text = ''
         while lineno >= 0 and len(all_stage_input_text) < max_concat_size:
-            # if self.lines[lineno].key == key:
-            if True:
+            if self.lines[lineno].key == key:
                 all_stage_input_text = self.lines[lineno].input_text + '\\&' + all_stage_input_text 
             lineno -= 1
         return all_stage_input_text[:-2]
